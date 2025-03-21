@@ -1,0 +1,93 @@
+# SPDX-License-Identifier: GPL-2.0+
+#
+# Copyright (C) 2022 eys3d - All Rights Reserved
+#
+# Authors: Hammer Hsieh <eys3d@eys3d.com>
+#
+
+menuconfig VIDEO_eCV5546
+	bool "Enable eCV5546 video support"
+	select DM_VIDEO
+	select DM_GPIO
+	select CMD_BMP
+	select CMD_CLS
+	# default y
+	help
+	  eCV5546 supports MIPI DSI video output. This option enables
+	  display function.
+
+config eCV5546_LT8912B_BRIDGE
+	bool "Enable eCV5546 LT8912B_HDMI bridge"
+	depends on VIDEO_eCV5546
+	default y
+	help
+		Enable this will init LT8912B_HDMI bridge via I2C6.
+
+config eCV5546_RASPBERRYPI_DSI_PANEL
+	bool "Enable eCV5546 RASPBERRYPI_DSI_PANEL"
+	depends on VIDEO_eCV5546
+	default n
+	help
+		Enable this will init RASPBERRYPI_DSI_PANEL via I2C6.
+
+config VIDEO_eCV5546_MAX_XRES
+	int "Maximum horizontal resolution (for memory allocation purposes)"
+	depends on VIDEO_eCV5546
+	default 1920
+	help
+	  The maximum horizontal resolution to support for the framebuffer.
+	  This configuration is used for reserving/allocating memory for the
+	  framebuffer during device-model binding/probing.
+
+config VIDEO_eCV5546_MAX_YRES
+	int "Maximum vertical resolution (for memory allocation purposes)"
+	depends on VIDEO_eCV5546
+	default 1080
+	help
+	  The maximum vertical resolution to support for the framebuffer.
+	  This configuration is used for reserving/allocating memory for the
+	  framebuffer during device-model binding/probing.
+
+config VIDEO_eCV5546_MAX_BPP
+	int "Maximum bits per pixel (for memory allocation purposes)"
+	depends on VIDEO_eCV5546
+	default 16
+	help
+	  The maximum bits per pixel to support for the framebuffer.
+	  This configuration is used for reserving/allocating memory for the
+	  framebuffer during device-model binding/probing.
+
+config VIDEO_eCV5546_ROTATE
+	int "Console Text Rotate Angle Setting"
+	depends on VIDEO_eCV5546
+	default 0
+	help
+	  Rotate angle 0: 0 degree / 1: 90 degree / 2: 180 degree / 3: 270 degree.
+
+config BMP_8BPP_UPDATE_CMAP
+	bool "Enable eCV5546 Update Palette for 8BPP"
+	depends on VIDEO_eCV5546
+	default y
+	help
+		Allow 8BPP format update palette.
+
+config DM_VIDEO_eCV5546_LOGO
+	bool "Enable eCV5546 video LOGO support"
+	depends on VIDEO_eCV5546
+	default n
+	help
+		Logo display support
+
+config DM_VIDEO_eCV5546_LOGO_ALIGN
+	bool "Align eCV5546 video LOGO to center"
+	depends on VIDEO_eCV5546
+	default n
+	help
+		Logo display support , align to center
+
+config VIDEO_BMP_LOGO_MANUAL
+	bool "LOGO display by manual"
+	depends on VIDEO_eCV5546
+	default n
+	help
+		Logo display by manual

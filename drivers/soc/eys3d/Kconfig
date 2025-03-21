@@ -1,0 +1,6 @@
+config OTP_EYS3D
+	bool "Enable OTP driver support for eYs3D SoC"
+	help
+	  This OTP driver supports eYs3D eCV5546 SoC.
+	  Say Y if you want to enable OTP function.
+

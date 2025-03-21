@@ -1,0 +1,12 @@
+config PINCTRL_EYS3D_eCV5546
+	bool "eYs3D eCV5546 Pinctrl and GPIO driver"
+	depends on DM && TARGET_PENTAGRAM_eCV5546
+	select PINCTRL
+	select PINCONF
+	select DM_GPIO
+	default y
+	help
+	  Support pin configuration control on eYs3D's eCV5546 SoC.
+
+	  The driver is controlled by a device tree node which contains both
+	  the GPIO definitions and pin control functions.
