@@ -1,0 +1,6 @@
+eCV5546 BOARD
+M:	Wells Lu <eys3d@eys3d.com>
+S:	Maintained
+F:	board/eys3d/ecv5546/
+F:	include/configs/pentagram_common_ecv5546.h
+F:	configs/ecv5546_*_defconfig

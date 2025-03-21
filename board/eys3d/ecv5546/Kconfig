@@ -1,0 +1,77 @@
+if TARGET_PENTAGRAM_eCV5546
+
+config SYS_CONFIG_NAME
+	default "pentagram_common_ecv5546"
+
+config SYS_SOC
+	default "pentagram"
+
+config SYS_BOARD
+	default "ecv5546"
+
+config SYS_VENDOR
+	default "eys3d"
+
+config SYS_USE_QKBOOT_HEADER
+	bool "use Sunpls quick boot header"
+	default n
+	help
+	  Enable eYs3D quick boot header
+	  eYs3D quick boot header is the same
+	  as mkimage header. It also has 64 bytes
+	  size with the same fields. We only change
+	  crc and type in generic mkimage header.
+	  It can speed up boot time. If enabled, we
+	  replace mkimage header of kernel image and
+	  also add eys3d-mkimage header on dtb image.
+
+config SRCADDR_KERNEL
+	hex "Linux kernel source address"
+	default 0x0 if SD_BOOT
+	default 0x0 if NAND_BOOT
+	default 0xF0200000
+	help
+	  Linux kernel source address
+	  Linux kernel image is stored in this
+	  address. This address can be nand/emmc
+	  address.
+
+config SRCADDR_KERNEL_BKUP
+	hex "The backup of linux kernel source address"
+	default 0x0 if SD_BOOT
+	default 0x0 if NAND_BOOT
+	default 0x12222
+	help
+	  The backup of linux kernel source address
+	  Linux kernel backup of image is stored in this
+	  address. This address can be nand/emmc
+	  address.
+
+config SRCADDR_DTB
+	hex "DTB source address"
+	default 0x0 if SD_BOOT
+	default 0x0 if NAND_BOOT
+	default 0xF0040000
+	help
+	  DTB(device tree blob) source address
+	  DTB image is stored in this address.
+	  This address can be nand/emmc address.
+
+config HUSH_PARSER
+	default y
+
+config SP_UTIL_MON
+	bool "enable eYs3D mon util"
+	default y
+	help
+	  Enable eYs3D mon util
+	  It is useful to read/write eYs3D register
+	  group.
+
+config SP_JTAG
+	bool "enable JTAG"
+	help
+	  Setup JTAG setting
+	  For Cortex-M4, setup JTAG config and pinmux.
+
+endif

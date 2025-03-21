@@ -1,0 +1,5 @@
+#
+# eYs3D Video configuration
+#
+
+source "drivers/video/eys3d/ecv5546/disp/Kconfig"
