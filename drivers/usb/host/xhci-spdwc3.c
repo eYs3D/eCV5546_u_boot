@@ -68,7 +68,7 @@ static void uphy_init(void)
 #if defined(CONFIG_TARGET_PENTAGRAM_eCV5546)
 #ifndef CONFIG_BOOT_ON_ZEBU
 	volatile struct uphy_u3_regs *dwc3phy_reg;
-	u32 result, i = 0;
+	u32 result, dir, i = 0;
 
 	UPHY0_ECO_REG->cfg[29] |= (0x1 << 30); // for usb3 vbus eco setting
 #endif
@@ -98,9 +98,9 @@ static void uphy_init(void)
 		}
 		mdelay(1);
 	}
-
+	dir = IS_ERR(gpiodir) ? 0 : dm_gpio_get_value(gpiodir);
 	dwc3phy_reg->cfg[2] |= 0x01;
-	if (dm_gpio_get_value(gpiodir))
+	if (dir)
 		dwc3phy_reg->cfg[5] = (dwc3phy_reg->cfg[5] & 0xFFE0) | 0x15;
 	else
 		dwc3phy_reg->cfg[5] = (dwc3phy_reg->cfg[5] & 0xFFE0) | 0x11;
@@ -222,11 +222,13 @@ static int xhci_dwc3_probe(struct udevice *dev)
 	node = ofnode_by_compatible(ofnode_null(), "eys3d,usb3-phy");
 	if (!ofnode_valid(node))
 		pr_err("%s phy node failed\n", __func__);
-	
+
 	ret = uclass_get_device_by_ofnode(UCLASS_PHY, node, &phydev);
 	if (ret)
 		pr_err("get phy device failed\n");
 	gpiodir = devm_gpiod_get(phydev, "typec", GPIOD_IS_IN);
+	if (IS_ERR(gpiodir))
+		pr_info("[USB3] No typec gpio\n");
 #endif
 	uphy_init();
 
@@ -271,7 +273,8 @@ static int xhci_dwc3_remove(struct udevice *dev)
 
 	//dwc3_shutdown_phy(dev, &plat->phys);
 #if defined(CONFIG_TARGET_PENTAGRAM_eCV5546)
-	dm_gpio_free(phydev, gpiodir);
+	if (!IS_ERR(gpiodir))
+		dm_gpio_free(phydev, gpiodir);
 #endif
 	return xhci_deregister(dev);
 }

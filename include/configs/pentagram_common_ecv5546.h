@@ -313,15 +313,19 @@
 #endif
 
 #if (OVERLAYFS == 1)
-#define ROOTFS_TYPE " rootfstype=squashfs\0"
+#define ROOTFS_TYPE 		"rootfstype=squashfs\0"
+#define NAND_ROOTDEV		"root=/dev/mtdblock9 ro"
+#define NAND_ROOTFS_TYPE	"rootfstype=squashfs"
 #else
-#define ROOTFS_TYPE "\0"
+#define ROOTFS_TYPE 		"\0"
+#define NAND_ROOTDEV		"root=ubi0:rootfs rw ubi.mtd=9"
+#define NAND_ROOTFS_TYPE	"rootfstype=ubifs"
 #endif
 
 #define CFG_EXTRA_ENV_SETTINGS \
 "sz_sign="                       __stringify(SIGN_SIZE) "\0" \
 "b_c=console=ttyS0,115200 earlycon\0" \
-"emmc_root=root=/dev/mmcblk0p9 rw rootwait" ROOTFS_TYPE \
+"emmc_root=root=/dev/mmcblk0p9 rw rootwait " ROOTFS_TYPE \
 "stdin=" STDIN_CFG "\0" \
 "stdout=" STDOUT_CFG "\0" \
 "stderr=" STDOUT_CFG "\0" \
@@ -419,7 +423,7 @@
 	"setexpr sz_kernel ${sz_kernel} + ${sz_sign}; " \
 	dbg_scr("echo from kernel partition to ${addr_temp_kernel} sz ${sz_kernel}; ") \
 	"nand read ${addr_temp_kernel} kernel ${sz_kernel}; " \
-	"setenv bootargs ${b_c} root=ubi0:rootfs rw ubi.mtd=9 rootflags=sync rootfstype=ubifs mtdparts=${mtdparts} user_debug=255 rootwait; " \
+	"setenv bootargs ${b_c} " NAND_ROOTDEV " rootflags=sync " NAND_ROOTFS_TYPE " mtdparts=${mtdparts} user_debug=255 rootwait; " \
 	"run boot_kernel \0" \
 "pnand_boot=nand read ${addr_tmp_header} kernel 0x40; " \
 	"setenv tmpval 0; setexpr tmpaddr ${addr_tmp_header} + 0x0c; run be2le; " \
