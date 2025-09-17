@@ -733,6 +733,21 @@ source "api/Kconfig"
 
 endmenu		# General setup
 
+menu "Mender OTA Integration"
+
+config MENDER_OTA_INTEGRATION
+	bool "Enable Mender OTA integration support"
+	help
+	  Enable support for Mender OTA (Over-The-Air) update integration.
+	  This enables A/B partition layout and Mender-specific environment
+	  variables for robust system updates.
+
+	  When enabled, the system will be configured with dual rootfs
+	  partitions (rootfsA/rootfsB) to support atomic updates and
+	  rollback functionality.
+
+endmenu
+
 source "boot/Kconfig"
 
 source "common/Kconfig"

@@ -6,6 +6,14 @@
  * Note:
  *	Do NOT use "//" for comment, it will cause issue in u-boot.lds
  */
+#ifdef CONFIG_MENDER_OTA_INTEGRATION
+#include <env_mender.h>
+#define EMMC_BOOT_CMD "run mender_bootcommand; "
+#define MENDER_ENV_SETTINGS_CONFIG "mender_bootcommand=" CONFIG_MENDER_BOOTCOMMAND "\0" MENDER_ENV_SETTINGS
+#else
+#define EMMC_BOOT_CMD "run emmc_boot; " "run check_boot;"
+#define MENDER_ENV_SETTINGS_CONFIG ""
+#endif
 
 #ifndef __CONFIG_PENTAGRAM_H
 #define __CONFIG_PENTAGRAM_H
@@ -203,8 +211,7 @@
 			"run qk_emmc_boot; " \
 		"else " \
 			"echo [scr] emmc boot; " \
-			"run emmc_boot; " \
-			"run check_boot;" \
+			EMMC_BOOT_CMD \
 		"fi; " \
 	"fi; " \
 "elif itest.l *${bootinfo_base} == " __stringify(SPINAND_BOOT) "; then " \
@@ -350,6 +357,7 @@
 "macaddr="                      __stringify(BOARD_MAC_ADDR) "\0" \
 "sdcard_devid="                 __stringify(SDCARD_DEVICE_ID) "\0" \
 "do_secure="                    __stringify(COMPILE_WITH_SECURE) "\0" \
+MENDER_ENV_SETTINGS_CONFIG \
 "loadbootscr=fatload ${isp_if} ${isp_dev}:1 ${scriptaddr} /${bootscr} || " \
 	"fatload ${isp_if} ${isp_dev}:1 ${scriptaddr} /boot/${bootscr} || " \
 	"fatload ${isp_if} ${isp_dev}:1 ${scriptaddr} /eys3d/ecv5546/${bootscr}; " \

@@ -11,6 +11,13 @@
 #include <linux/stringify.h>
 
 #include <generated/environment.h>
+#ifdef CONFIG_MENDER_OTA_INTEGRATION
+#include <env_mender.h>
+#define MENDER_DEFAULT_ENV MENDER_ENV_SETTINGS
+#else
+#define MENDER_DEFAULT_ENV
+#endif
+
 
 #ifdef DEFAULT_ENV_INSTANCE_EMBEDDED
 env_t embedded_environment __UBOOT_ENV_SECTION__(environment) = {
@@ -26,6 +33,7 @@ char default_environment[] = {
 #else
 const char default_environment[] = {
 #endif
+MENDER_DEFAULT_ENV
 #ifndef CONFIG_USE_DEFAULT_ENV_FILE
 #ifdef	CONFIG_ENV_CALLBACK_LIST_DEFAULT
 	ENV_CALLBACK_VAR "=" CONFIG_ENV_CALLBACK_LIST_DEFAULT "\0"
