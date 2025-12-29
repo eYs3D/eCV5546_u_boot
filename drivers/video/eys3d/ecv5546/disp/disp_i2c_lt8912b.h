@@ -65,7 +65,7 @@ void lt8912_write_init_config(struct udevice *p1)
 	dm_i2c_reg_write(p1, 0x3f, 0xd4); /* fixed d4 or not setting */
 	dm_i2c_reg_write(p1, 0x41, 0x3c); /* fixed 3c or 7c ? */
 	dm_i2c_reg_write(p1, 0xB2, 0x00); /* fixed 00 or not setting */
-	dm_i2c_reg_write(p1, 0x42, 0x05); /* fixed 04 or 05 ? */
+	dm_i2c_reg_write(p1, 0x42, 0x04); /* fixed 04 or 05 ? */
 	#if 0
 	//test
 	dm_i2c_reg_write(p1, 0x3e, 0xc6);
