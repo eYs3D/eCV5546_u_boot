@@ -288,6 +288,23 @@
 		"source ${scriptaddr}; "\
 	"fi; "
 
+#define USB_EXT_CMD \
+	"scriptaddr=0x1000000; " \
+	"bootscr=boot.scr; " \
+	"bootenv=uEnv.txt; " \
+	"if run loadbootenv; then " \
+		"echo Loaded environment from ${bootenv}; " \
+		"env import -t ${scriptaddr} ${filesize}; " \
+	"fi; " \
+	"if test -n ${uenvcmd}; then " \
+		"echo Running uenvcmd ...; " \
+		"run uenvcmd; " \
+	"fi; " \
+	"if run loadbootscr; then " \
+		"echo Jumping to ${bootscr}; " \
+		"source ${scriptaddr}; "\
+	"fi; "
+
 #if (NOR_JFFS2 == 1)
 #define NOR_LOAD_KERNEL \
 	dbg_scr("echo kernel from ${addr_src_kernel} to ${addr_temp_kernel} sz ${sz_kernel}; ") \
@@ -517,9 +534,14 @@ MENDER_ENV_SETTINGS_CONFIG \
 	"$isp_if start; " \
 	"run isp_common; " \
 	"\0" \
-"usb_boot=setenv isp_if usb && setenv isp_dev 0; " \
+"usb_boot=setenv isp_if usb && setenv isp_dev 0 && setenv isp_part 1; " \
 	"$isp_if start; " \
-	"run isp_common; " \
+	"part list $isp_if $isp_dev; " \
+	"echo run usb_boot; " \
+	"echo isp-interface=${isp_if} ; " \
+	"echo isp-device=${isp_dev} ; " \
+	"echo isp-part=${isp_part} ; " \
+	USB_EXT_CMD \
 	"\0" \
 "isp_sdcard=setenv isp_if mmc && setenv isp_dev $sdcard_devid; " \
 	"mmc list; " \
